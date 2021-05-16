@@ -1,1 +1,1 @@
-# EventManagr
+# EventPlanr
