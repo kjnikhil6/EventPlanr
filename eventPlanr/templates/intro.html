@@ -1,0 +1,54 @@
+{% extends "layout_login.html" %}
+
+{% block head %}
+   
+   {{ super() }}
+    <link href="https://cdn.jsdelivr.net/gh/atoms19/ILUS.CSS/dist/ILUS5.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    
+    
+    
+    
+    <style>
+    body,
+    h1 {
+        font-family: "Raleway", sans-serif
+    }
+
+    body,
+    html {
+        height: 100%
+    }
+
+    .bgimg {
+        background: url("{{ url_for('static', filename='1.jpg') }}");
+        min-height: 100%;
+        background-position: center;
+        background-size: cover;
+    }
+    </style>
+    
+{% endblock %}   
+
+
+
+
+
+
+
+
+{% block content %}
+<div class="bgimg w3-display-container w3-animate-opacity w3-text-white">
+
+        <div class="w3-display-middle">
+            <hero class="center">
+                <h6 class="font-jumbo pack-5 font-2 anime-left" align="center">Welcome</h6>
+            </hero>
+            <h6 class="w3-jumbo w3-animate-top"><font face="Georgia" size="20px" align="center">Create and Join Events </font></h6>
+            <hr class="w3-border-grey" style="margin:auto;width:40%">
+            <p class="w3-large w3-center">GEC PALAKKAD</p>
+        </div>
+    </div>
+    </div>
+  {% endblock content %}
+

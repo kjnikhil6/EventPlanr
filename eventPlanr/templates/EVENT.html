@@ -1,0 +1,201 @@
+{% extends "layout_login.html" %}
+
+
+{% block head %}
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+<style>
+body {
+  background-color: #000000;
+  color: #ffffff;
+}
+h1, h2, h3, h4, h5, h6 {
+  color: #ffffff;
+}
+
+p {
+   color: #e0caca;
+}
+
+.site-header .navbar-nav .nav-link:hover {
+  color: #ffffff;
+}
+
+.site-header .navbar-nav .nav-link.active {
+  font-weight: 500;
+}
+
+.content-section {
+  background: #000000;
+  padding: 10px 20px;
+  
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.article-title {
+  color: #ffffff;
+}
+
+a.article-title:hover {
+  color: #428bca;
+  text-decoration: none;
+}
+
+.article-content {
+  white-space: pre-line;
+}
+
+.article-img {
+  height: 65px;
+  width: 65px;
+  margin-right: 16px;
+}
+
+.article-metadata {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3
+}
+
+.article-metadata a:hover {
+  color: #333;
+  text-decoration: none;
+}
+
+.article-svg {
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+}
+
+.account-img {
+  height: 125px;
+  width: 125px;
+  margin-right: 20px;
+  margin-bottom: 16px;
+}
+
+.account-heading {
+  font-size: 2.5rem;
+}
+
+
+
+nav a {
+  color: #ffffff;
+}
+footer {
+  color: #ffffff;
+}
+</style>
+
+
+   
+ {% endblock %}   
+
+
+
+
+
+
+
+{% block content %}
+
+
+<br><br>
+ <main role="main" class="container">
+      <div class="row">
+        <div class="col-md-8">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+          
+<! ..............content......... >
+  <article class="media content-section">
+    <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + event.author.image_file) }}">
+    <div class="media-body">
+      <div class="article-metadata">
+        <a class="mr-2" href="#">{{ event.author.name }}</a>
+        <small class="text-muted">{{ event.date_posted.strftime('%Y-%m-%d') }}</small>
+        {% if event.author == current_user %}
+          <div>
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="#">Update</a>
+            <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+          </div>
+        {% endif %}
+      </div>
+<div class="card" style="width: 100%;background-color:black">
+<h2 class="card-title" style= " padding-bottom: value;
+    border-bottom-style: solid; border-bottom-color: grey;">{{event.title}}</h2>
+  <img class="card-img-top" src="{{ url_for('static', filename='event_banner/' + event.banner_file) }}" alt="Card image cap">
+  <div class="card-body">
+<center>
+    <p class="card-text">{{event.description}}</p>
+    <br>
+    </center>
+    <ul class="list-group">
+            <li class="list-group-item list-group-item-primary"><div class="text-primary"></div></li>
+                <li class="list-group-item list-group-item-primary">Announcements</li>
+                <li class="list-group-item list-group-item-primary">Calendars</li>
+                <li class="list-group-item list-group-item-primary">etc</li>
+              </ul>
+              <br>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+    <div class="card-footer text-muted">
+    2 days ago
+  </div>
+</div>
+    </div>
+  </article>
+  <!-- Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel" style="color:black">Delete Event?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form action="#" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+          </div>
+          {% if event.author != current_user %}
+        <div class="col-md-4">
+          <div class="content-section">
+          
+            <h3>About Host</h3>
+            <p class='text-muted'>You can put any information here you'd like.
+                <ul class="list-group">
+                <li class="list-group-item list-group-item-primary">Latest Posts</li>
+                <li class="list-group-item list-group-item-primary">Announcements</li>
+                <li class="list-group-item list-group-item-primary">Calendars</li>
+                <li class="list-group-item list-group-item-primary">etc</li>
+              </ul>
+            </p>
+           
+          </div>
+        </div>
+         {% endif %}
+      </div>
+    </main>
+  
+  
+{% endblock content %}
