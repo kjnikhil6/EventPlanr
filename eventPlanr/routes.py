@@ -1,7 +1,7 @@
 import os
 import secrets
 from PIL import Image
-from flask import render_template, url_for, flash, redirect,request
+from flask import render_template, url_for, flash, redirect,request,abort
 from eventPlanr import app,db,bcrypt
 from eventPlanr.forms import RegistrationForm, LoginForm,UpdateAccForm,HostForm
 from eventPlanr.models import User, Event
@@ -122,16 +122,86 @@ def host():
             return redirect(url_for('host'))
 
         
-        return render_template('hostEvent.html',title='Host',form=form)
+        return render_template('hostEvent.html',title='Host',form=form,legend='Host a Event')
  
 @app.route('/events/<int:event_id>')
 
 def event(event_id):
     event=Event.query.get_or_404(event_id)
-    return render_template('EVENT.html',title=event.title,event=event)
+    enroll=['Enroll','Enroll in this Event?','Enroll Now','primary',0]
+    if event in current_user.JoinedEvent:
+        enroll=['Enrolled','UnEnroll from this Event?','UnEnroll','warning',1]
+    return render_template('EVENT.html',title=event.title,event=event,enrollVal=enroll)
 
-@app.route('/events/join',methods=['POST'])
-def join():
+@app.route("/events/<int:event_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_event(event_id):
+    event=Event.query.get_or_404(event_id)
+    if event.author != current_user:
+        abort(403)
+    form = HostForm()
+    if form.validate_on_submit():
+        if form.banner.data:
+            banner_fil = save_picture(form.banner.data,reduce=False,folder='static/event_banner')
+            event.banner_file=banner_fil
+        event.title = form.title.data
+        event.description = form.description.data
+        event.location= form.location.data
+        event.maxJoin = form.maxJoin.data
+        db.session.commit()
+        flash('Your Event has been updated!', 'success')
+        return redirect(url_for('event', event_id=event.id))
+    elif request.method == 'GET':
+        form.title.data = event.title
+        form.description.data = event.description
+        form.maxJoin.data=event.maxJoin
+        form.location.data=event.location
+    return render_template('hostEvent.html', title='Update Event',
+                           form=form, legend='Update Event')
+        
+@app.route("/events/<int:event_id>/delete", methods=['POST'])
+@login_required
+def delete_event(event_id):
+    event = Event.query.get_or_404(event_id)
+    if event.author != current_user:
+        abort(403)
+    db.session.delete(event)
+    db.session.commit()
+    flash('Your Event has been deleted!', 'success')
+    return redirect(url_for('events'))
+
+
+@app.route("/events/<int:event_id>/join",methods=['POST'])
+def join_event(event_id):
+    event = Event.query.get_or_404(event_id)
+    if event.author == current_user :
+        flash('Your the Host!!!!!!        ', 'warning')
+        return redirect(url_for('events'))
+    elif event in current_user.JoinedEvent:
+        flash('Already JOINED Event!','warning')
+        return redirect(url_for('events'))
+    else:
+        event.participants.append(current_user)
+        db.session.commit()
+        flash('Successfully Joined the Event!','success')
+        return redirect(url_for('event',event_id=event.id)) 
+              
+    #user = User.query.get(current_user.id)
+    #to remove  user.JoinedEvent.remove(event)
+    
+    
+    return "good"
+    
+@app.route("/events/<int:event_id>/unjoin", methods=['POST'])
+@login_required
+def unjoin_event(event_id):
+    event = Event.query.get_or_404(event_id)
+    current_user.JoinedEvent.remove(event)
+    db.session.commit()
+    flash('You have been successfully unenrolled!', 'success')
+    return redirect(url_for('event',event_id=event.id)) 
+    
+        
     #joined=Event.query.filter_by(title.data).first()
-    flash('You successfully joined!', 'success')
-    return redirect(url_for('home'))
+    #flash('You successfully joined!', 'success')
+    #return redirect(url_for('home'))
