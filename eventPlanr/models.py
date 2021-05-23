@@ -24,9 +24,9 @@ JoinedUserEvent=db.Table('JoinedUserEvent',
 
 class User(db.Model,UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    image_file = db.Column(db.String(20), nullable=False, default=defaultProfile)
+    #image_file = db.Column(db.String(20), nullable=False, default=defaultProfile)
     password = db.Column(db.String(60), nullable=False)
     
     posts = db.relationship('Event', backref='author', lazy=True)
@@ -44,7 +44,7 @@ class Event(db.Model):
     dateTime = db.Column(db.DateTime, nullable=False)
 
     banner=db.Column(db.LargeBinary,default=defaultBanner)
-    banner_file=db.Column(db.String(50), nullable=False, default='default.jpg')
+    #banner_file=db.Column(db.String(50), nullable=False, default='default.jpg')
     
     maxJoin=db.Column(db.Integer,default=100)
     location=db.Column(db.String(100),nullable=False)
