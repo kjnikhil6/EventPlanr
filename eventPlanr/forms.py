@@ -6,6 +6,7 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo,ValidationEr
 from eventPlanr.models import User,Event
 from dateutil.parser import parse 
 from datetime import datetime
+#from wtforms  import FileField as Ff
 
 class RegistrationForm(FlaskForm):
     name = StringField('Name',validators=[DataRequired(), Length(min=2, max=20)])
@@ -55,7 +56,7 @@ class HostForm(FlaskForm):
     dateTime =  StringField('Event Date&Time',validators=[DataRequired()])
     location = StringField('Event Location',validators=[DataRequired(), Length(min=3, max=20)])
     banner = FileField('Event Banner', validators=[FileAllowed(['jpg', 'png'])])
-    maxJoin = IntegerField('Max No.of Participants')
+    maxJoin = IntegerField('Max No.of Participants',validators=[DataRequired()])
     
     submit = SubmitField('Host')
     
@@ -75,8 +76,42 @@ class HostForm(FlaskForm):
                 raise ValidationError('Title has already been taken')
     
     def validate_maxJoin(self, maxJoin):
+        event=Event.query.filter_by(maxJoin=maxJoin.data).first()
+        if maxJoin.data < 3:
+            raise ValidationError('atleast 3 participants')
 
-        if  maxJoin.data :
-            if maxJoin.data < 4:
-                raise ValidationError('There should be atleast 4 participants!')
+
+class UpdateHostForm(FlaskForm):
+    
+    title = StringField('Event Title',validators=[DataRequired(), Length(min=3, max=40)])
+    description=TextAreaField('Description',validators=[DataRequired(), Length(min=3, max=5000)])
+    dateTime =  StringField('Event Date&Time',validators=[DataRequired()])
+    location = StringField('Event Location',validators=[DataRequired(), Length(min=3, max=20)])
+    banner = FileField('Event Banner', validators=[FileAllowed(['jpg', 'png'])])
+    maxJoin = IntegerField('Max No.of Participants',validators=[DataRequired()])
+    
+    submit = SubmitField('Update')
+    
+    def validate_dateTime(self, dateTime):
+        if dateTime.data:
+            if parse(dateTime.data) < datetime.utcnow():
+                raise ValidationError('Select an Upcoming Date')
+            else:
+                dateTime.data=parse(dateTime.data)
+            
+            # else:
+            #     dateTime.data=d 
+    
+    def validate_title(self, title):
+        t = Event.query.filter_by(title=title.data).first()
+        if t:
+            if t.author != current_user:
+                raise ValidationError('Title has already been taken')
+    
+    def validate_maxJoin(self, maxJoin):
+        if maxJoin.data < 3:
+            raise ValidationError('atleast 3 participants')
+        
+        
+            
                

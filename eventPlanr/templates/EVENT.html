@@ -10,6 +10,13 @@ body {
   background-color: #000000;
   color: #ffffff;
 }
+img {
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+}
+
+
 h1, h2, h3, h4, h5, h6 {
   color: #ffffff;
 }
@@ -120,10 +127,10 @@ footer {
           
 <! ..............content......... >
   <article class="media content-section">
-    <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + event.author.image_file) }}">
+    <img class="rounded-circle article-img" src="data: ;base64,{{ profile_pic }}">
     <div class="media-body">
       <div class="article-metadata">
-        <a class="mr-2" href="#">{{ event.author.name }}</a>
+        <a class="mr-2" href="{{ url_for('user_HostEvents',user_id=event.author.id)}}">{{ event.author.name }}</a>
         <small class="text-muted">{{ event.date_posted.strftime('%Y-%m-%d') }}</small>
         {% if event.author == current_user %}
           <div>
@@ -134,7 +141,7 @@ footer {
       </div>
 <div class="card" style="width: 100%;background-color:black">
 <h2 class="card-title" ><strong>{{event.title}}</strong></h2>
-  <img class="card-img-top" src="{{ url_for('static', filename='event_banner/' + event.banner_file) }}" alt="Card image cap">
+  <img class="card-img-top" src="data: ;base64,{{ banner }}" alt="Card image cap">
   <div class="card-body">
 
     <p class="card-text"><strong>{{event.description}}</strong></p>
@@ -145,12 +152,32 @@ footer {
                 <li class="list-group-item list-group-item-primary"><strong>Place: </strong>{{event.location}}</li>
                 <li class="list-group-item list-group-item-primary"><strong>Max Participants:</strong>{{event.maxJoin}}</li>
                 
-              </ul>
-              <br>
-    <button type="button" class="btn btn-{{enrollVal[3]}}" data-toggle="modal" data-target="#joinModal">{{enrollVal[0]}}</button>
+              </ul><br>
+    {% if event.author != current_user %}
+       {% if event.dateTime >= today %}
+          {% if  event.participants|length < event.maxJoin %}
+              
+             <button type="button" class="btn btn-{{enrollVal[3]}}" data-toggle="modal" data-target="#joinModal">{{enrollVal[0]}}</button>
+     
+          {% else %}
+     
+             <button type="button" class="btn btn-#" >The Event is Full</button>
+       
+          {% endif %}
+       {% else %}
+          <button type="button" class="btn btn-#" >Expired</button>
+       
+       {% endif %}
+    
+    {% endif %}
   </div>
     <div class="card-footer text-muted">
-    2 days ago
+    {% if (event.dateTime-today).days != 0 %}
+     {{(event.dateTime-today).days}} more days to go..
+    {% else %}
+      Today
+    {% endif %}
+    
   </div>
 </div>
     </div>
@@ -200,23 +227,74 @@ footer {
   </div>
   
           </div>
-          {% if event.author == current_user %}
+    {% if event.author == current_user %}
+    
         <div class="col-md-4">
-          <div class="content-section">
-          
-            <h3>About Host</h3>
-            <p class='text-muted'>You can put any information here you'd like.
-                <ul class="list-group">
-                <li class="list-group-item list-group-item-primary">Latest Posts</li>
-                <li class="list-group-item list-group-item-primary">Announcements</li>
-                <li class="list-group-item list-group-item-primary">Calendars</li>
-                <li class="list-group-item list-group-item-primary">etc</li>
+        <div class="content-section">
+        <h3 class="card-header">Participants Info</h3>
+          <div class="card text-center text-white bg-dark mb-3" >
+          <div class="card-body" >
+            
+         {% if event.participants|length == 0 %}
+            <br>
+            <strong><h4 class="text-muted">None Joined Yet..</h6> </strong>
+             
+         {% else %}
+            
+             {% if event.participants|length >= event.maxJoin %}
+              <br>
+              <strong><h4 class="text-muted">This Event Is Full..</h6> </strong>
+             {% else %}
+             <br>
+              <strong><h4 class="text-muted">{{event.participants|length}}/{{event.maxJoin}} Joined </h6> </strong>
+             
+             {% endif %}
+              <p> <ul class="list-group">
+              <a class="btn btn-primary" data-toggle="collapse" href="#CollapseExample" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Participants</a>
+              <div class="collapse" id="CollapseExample">
+              {% for user in event.participants %}
+              
+                <li class="list-group-item list-group-item-dark"><tt style="float:left">{{loop.index}})</tt> {{user.name}}  <br> {{ user.email}} </li>
+              {% endfor %}
+              </div>
               </ul>
             </p>
+        {% endif %}
+            
+
+    {% else %}
+         <div class="col-md-4">
+         <div class="content-section">
+         <h3 class="card-header">Details</h3>
+          <div class="card text-center text-white bg-dark mb-3" >
+          <div class="card-body" >
+            
+            {% if event.participants|length == 0 %}
+            <br>
+            <strong><h4 class="text-primary">None Joined Yet..</h6> </strong>
+             {% elif event.participants|length >= event.maxJoin %}
+             <br>
+            <strong><h4 class="text-primary">This Event Is Full..</h6> </strong>
+            {% else %}
+             <br>
+              <strong><h4 class="text-primary"><strong>{{event.participants|length}}<strong>/{{event.maxJoin}} joined </h6> </strong>
+            {% endif %}
+            
+               <p> <ul class="list-group">
+
+                <li class="list-group-item list-group-item-dark"><strong>Host email:</strong> {{event.author.email}}</li>
+
+              </ul>
+            </p>
+            
+        {% endif %}
+            </div>
            
           </div>
-        </div>
-         {% endif %}
+       
+       
+       </div> </div>
+
       </div>
     </main>
   

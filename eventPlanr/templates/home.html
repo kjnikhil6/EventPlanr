@@ -1,0 +1,199 @@
+{% extends "layout_login.html" %}
+
+
+
+{% block bg %}
+<link rel="stylesheet" href="{{ url_for('static', filename='shedule.css') }}">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<style>
+
+
+.container .content {
+  position: absolute; /* Position the background text */
+  bottom: 0; /* At the bottom. Use top:0 to append it to the top */
+  background: rgb(0, 0, 0); /* Fallback color */
+  background: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
+  color: #f1f1f1; /* Grey text */
+  width: 100%; /* Full width */
+  padding: 20px; /* Some padding */
+}
+
+
+
+
+
+  /* Make the image fully responsive */
+  body{
+  background-color:black;
+  color:white;}
+  .carousel-inner img {
+    width: 100%;
+    height: 100%;
+  }
+  </style>
+
+{% endblock %}   
+
+
+
+
+{% block content %}
+
+<br>
+ {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+
+
+
+<main role="main" class="container">
+  <div class="row">
+  <div class="col-sm-8">  
+ <center> ONGOING EVENTS  </center>
+<div id="demo" class="carousel slide carousel-fade" data-ride="carousel">
+  <ul class="carousel-indicators">
+    <li data-target="#demo" data-slide-to="0" class="active"></li>
+    <li data-target="#demo" data-slide-to="1"></li>
+    <li data-target="#demo" data-slide-to="2"></li>
+    <li data-target="#demo" data-slide-to="3"></li>
+    <li data-target="#demo" data-slide-to="4"></li>
+  </ul>
+  <div class="carousel-inner" style="background-color:black;filter: brightness(75%); " >
+
+  {% for event,image in upcoming5.items(): %}
+  {% if loop.index == 1 %}
+    <div class="carousel-item active " data-interval="3000">
+      <img src="data: ;base64,{{ image}}"  alt="a" style="width:100%; height: 400px;">
+      <div class="carousel-caption ">
+      <div class="content">
+        <h3 class="color:white">{{event.title}}</h3>
+        <p style="color:white">{{event.description}}</p>
+        <a href="{{ url_for('event',event_id=event.id)}}" class="btn btn-success"> View </a>
+      </div>
+      </div>   
+    </div>
+   {% else %}
+    <div class="carousel-item" data-interval="3000">
+      <img src="data: ;base64,{{ image}}"  style="width:100%; height: 400px;" alt="b" >
+      <div class="carousel-caption ">
+      <div class="content">
+        <h3 style="color:white">{{event.title}}</h3>
+        <p style="color:white">{{event.description}}</p>
+        <a href="{{ url_for('event',event_id=event.id)}}" class="btn btn-success"> View </a>
+      </div>
+      </div>   
+    </div>
+   {% endif %}
+   {% endfor %}
+  </div>
+  <a class="carousel-control-prev" href="#demo" data-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </a>
+  <a class="carousel-control-next" href="#demo" data-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </a>
+</div>
+</div><div class="col sm-2">
+				
+				<div class="container py-7">
+        <h2 class="text-uppercase text-letter-spacing-xs my-0 text-primary font-weight-bold">
+          Schedule
+        </h2>
+        <p class="text-sm text-dark mt-0 mb-5">There's time and place for everything.</p>
+        <!-- Days -->
+        <div class="row">
+          <div class="col-lg-4 mb-3" id="Friday, Nov 13th">
+            <h4 class="mt-0 mb-3 text-dark op-8 font-weight-bold">
+              Your_Events
+            </h4>
+            <ul class="list-timeline list-timeline-primary">
+  {% for event in schedule: %}
+  {% if loop.index == 1 %}              
+              <li class="list-timeline-item p-0 pb-3 pb-lg-4 d-flex flex-wrap flex-column">
+                <a  href="{{ url_for('event',event_id=schedule[0].id)}}"  class="my-0 text-white flex-fw text-sm text-uppercase">
+                <span class="text-primary op-8">
+                {{event.dateTime.strftime("%d/%m/%y %I:%M:%p")}}</span> - {{event.title}}</a>
+              </li>
+    {% else %}
+              <li class="list-timeline-item show p-0 pb-3 pb-lg-4 d-flex flex-wrap flex-column">
+                <a href="{{ url_for('event',event_id=schedule[1].id)}}"  class="my-0 text-dark flex-fw text-sm text-uppercase">
+                <span class="text-dark font-weight-bold op-8 ">{{event.dateTime.strftime("%d/%m/%y %I:%M:%p")}}</span> -{{event.title}}</a>
+              </li>
+   {% endif %}
+   {% endfor %}
+
+
+ 
+            </ul>
+          </div>
+         
+    
+        </div>
+				
+</div></div></div>
+
+<br><br>
+ <div class="row">
+   <div class="col-sm-6">
+        
+       <button class="btn btn-primary"  >
+        Joined Events</button>
+        
+        
+          
+           <div class="card text-center text-white bg-dark mb-3" >
+       
+              <div class="card-body" style="background-color:#000000;">
+              <ul class="list-group">
+              {% for event in joinEvents %}
+              
+                <li class="list-group-item list-group-item-info"><strong><tt style="float:left">{{loop.index}})</tt><a href="{{ url_for('event',event_id=event.id)}}"  style="color:black"> {{event.title}} </a></strong> </li>
+              {% endfor %}
+            </ul>
+            <br>
+     <a href="{{ url_for('events')}}" class="btn btn-outline-info"> Join </a>
+               
+              </div>
+            </div>
+         
+   </div>
+     
+        <div class="col-sm-6">
+<button class="btn btn-primary"  >
+        Hosted Events</button>
+          
+      <div class="card text-center text-white bg-dark mb-3" >
+       
+              <div class="card-body" style="background-color:#000000;">
+              <ul class="list-group">
+              {% for event in hostEvents %}
+              
+                <li class="list-group-item list-group-item-info"><strong><tt style="float:left">{{loop.index}})</tt><a href="{{ url_for('event',event_id=event.id)}}" style="color:black"> {{event.title}} </a></strong> </li>
+              {% endfor %}
+            </ul>
+            <br>
+     <a href="{{ url_for('events')}}" class="btn btn-outline-info"> Host </a>
+               
+              </div>
+            </div>
+        </div>
+        </div>
+        
+        </main>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+
+
+{% endblock %}

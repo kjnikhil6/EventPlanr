@@ -1,0 +1,90 @@
+{% extends "layout_login.html" %}
+    
+    
+ {% block head %}  
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+  {% endblock %}    
+  
+    
+{% block bg %}
+<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+<style>
+img {
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+}
+</style>
+{% endblock %}   
+
+{% block content %}
+      <br>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+
+<main role="main" class="container">
+{% for event,image in events.items(): %}
+
+{% if loop.index%2 == 1 %}
+
+  <div class="row">
+  
+  
+  <div class="col-sm-6">    
+     <div class="card text-center text-white bg-dark mb-3" >
+	<h4 class="card-header" style="background-color:#000000;"><strong style="padding-bottom: value;
+    border-bottom-style: solid; border-bottom-color: grey;">
+    {{event.title}}</strong></h4>
+  <img class="card-img-top" src= "data: ;base64,{{ image}}" alt="Unable to Load">
+  <div class="card-body" style="background-color:#000000;">
+    <p class="card-text">{{event.description}}.</p>
+   <a href="{{ url_for('event',event_id=event.id)}}" class="btn btn-primary">View</a> 
+   
+   <div class="text-muted">
+<br>
+
+     {% if (event.dateTime-today).days != 0 %}
+     {{(event.dateTime-today).days}} more days to go..
+    {% else %}
+      Today
+    {% endif %}</div>
+  </div>
+   </div>
+   </div>
+{% else %}
+   
+   <div class="col-sm-6">		
+   <div class="card text-center text-white bg-dark mb-3" >
+   <h4 class="card-header" style="background-color:#000000;"><strong style="padding-bottom: value;
+    border-bottom-style: solid; border-bottom-color: grey;">
+    {{event.title}}</strong></h4>
+  <img class="card-img-top" src="data: ;base64,{{ image}}" alt="Unable to Load">
+  <div class="card-body" style="background-color:#000000;">
+    <p class="card-text">{{event.description}}.</p>
+     <a href="{{ url_for('event',event_id=event.id)}}" class="btn btn-primary"> View</a>
+     <div class="text-muted"><br>
+    {{(event.dateTime-today).days}} more days to go..</div>
+  </div>
+   </div>
+   </div>
+
+
+   </div>
+   
+ {% endif %}  
+ <br>     
+  {% endfor %}   
+    </main>
+
+
+
+{% endblock %}     

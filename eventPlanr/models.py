@@ -1,7 +1,7 @@
 from datetime import datetime
 from eventPlanr import db,login_manager
 from flask_login import UserMixin
-
+from eventPlanr.defaultEnc import defaultBanner,defaultProfile
 
 
 @login_manager.user_loader
@@ -26,7 +26,7 @@ class User(db.Model,UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    image_file = db.Column(db.String(20), nullable=False, default=defaultProfile)
     password = db.Column(db.String(60), nullable=False)
     
     posts = db.relationship('Event', backref='author', lazy=True)
@@ -42,7 +42,10 @@ class Event(db.Model):
     title = db.Column(db.String(100), unique=True,nullable=False)
     description = db.Column(db.Text, nullable=False)
     dateTime = db.Column(db.DateTime, nullable=False)
+
+    banner=db.Column(db.LargeBinary,default=defaultBanner)
     banner_file=db.Column(db.String(50), nullable=False, default='default.jpg')
+    
     maxJoin=db.Column(db.Integer,default=100)
     location=db.Column(db.String(100),nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)

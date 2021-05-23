@@ -1,0 +1,20 @@
+autopep8 @ file:///tmp/build/80754af9/autopep8_1596578164842/work
+click==7.1.2
+Flask==1.1.2
+Flask-Bcrypt==0.7.1
+Flask-Login==0.5.0
+Flask-SQLAlchemy @ file:///home/conda/feedstock_root/build_artifacts/flask-sqlalchemy_1616102249273/work
+Flask-WTF==0.14.3
+gunicorn==20.0.4
+itsdangerous==1.1.0
+Jinja2==2.11.2
+MarkupSafe==1.1.1
+Pillow @ file:///tmp/build/80754af9/pillow_1603822255246/work
+pycodestyle==2.6.0
+python-dateutil==2.8.1
+python-editor==1.0.4
+pytz==2020.1
+Werkzeug==1.0.1
+WTForms==2.2.1
+
+

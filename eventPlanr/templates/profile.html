@@ -113,7 +113,7 @@ footer {
          
         <div class="content-section">
       <div class="media">
-        <img class="rounded-circle account-img" src="{{ image_file }}">
+        <img class="rounded-circle account-img" src="data: ;base64,{{ profile_pic }}">
         <div class="media-body">
           <h2 class="account-heading">{{ current_user.name }}</h2>
           <p>{{ current_user.email }}</p>
@@ -175,13 +175,40 @@ footer {
        </div>
        <div class="col-md-4">
           <div class="content-section">
-            <h3>Our Sidebar</h3>
-            <p>You can put any information here you'd like.
+            <h3>Dashboard</h3>
+            <p>
               <ul class="list-group">
-                <li class="list-group-item list-group-item-primary">Latest Posts</li>
-                <li class="list-group-item list-group-item-primary">Announcements</li>
-                <li class="list-group-item list-group-item-primary">Calendars</li>
-                <li class="list-group-item list-group-item-primary">etc</li>
+
+                <li class="list-group-item list-group-item-primary">
+                            <strong>Total No.Of Events Hosted:</strong>
+                                   {{ joinedEvents|length}}</li>
+               
+               <a class="btn btn-primary" data-toggle="collapse" href="#JoinedEvents" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                Click to see Joined Events</a>
+                <div class="collapse" id="JoinedEvents">    
+            {% for event in joinedEvents %}
+              
+                <li class="list-group-item list-group-item-dark"><tt style="float:left">{{loop.index}})</tt><a href="{{ url_for('event',event_id=event.id)}}" style="color:black" > {{event.title}} </a>  </li>
+              {% endfor %}
+              
+              </div>   
+                <li class="list-group-item list-group-item-primary">
+                         <strong>Total No.Of Events Enrolled:</strong>
+                 
+                                 {{ hostedEvents|length}}</li>
+                                 
+         
+                <a class="btn btn-primary" data-toggle="collapse" href="#HostedEvents" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                Click to see Hosted Events</a>
+                 
+              
+            <div class="collapse" id="HostedEvents">    
+            {% for event in hostedEvents %}
+              
+                <li class="list-group-item list-group-item-dark"><tt style="float:left">{{loop.index}})</tt> <a href="{{ url_for('event',event_id=event.id)}}" style="color:black" >{{event.title}} </a> </li>
+              {% endfor %}
+              
+              </div>
               </ul>
             </p>
           </div>

@@ -6,31 +6,103 @@
    
    {{ super() }}
     <link href="https://cdn.jsdelivr.net/gh/atoms19/ILUS.CSS/dist/ILUS5.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    
     
     
     
     
     <style>
-    body,
-    h1 {
-        font-family: "Raleway", sans-serif
-    }
 
-    body,
-    html {
-        height: 100%
-    }
+body {
+  background-color: #000000;
+  color: #ffffff;
+}
+h1, h2, h3, h4, h5, h6 {
+  color: #ffffff;
+}
 
-    .bgimg {
-        background: url("{{ url_for('static', filename='1.jpg') }}");
-        min-height: 100%;
-        background-position: center;
-        background-size: cover;
-    }
-    </style>
+p {
+   color: #e0caca;
+}
+
+.site-header .navbar-nav .nav-link:hover {
+  color: #ffffff;
+}
+
+.site-header .navbar-nav .nav-link.active {
+  font-weight: 500;
+}
+
+.content-section {
+  background: #000000;
+  padding: 10px 20px;
+  
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.article-title {
+  color: #ffffff;
+}
+
+a.article-title:hover {
+  color: #428bca;
+  text-decoration: none;
+}
+
+.article-content {
+  white-space: pre-line;
+}
+
+.article-img {
+  height: 65px;
+  width: 65px;
+  margin-right: 16px;
+}
+
+.article-metadata {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3
+}
+
+.article-metadata a:hover {
+  color: #333;
+  text-decoration: none;
+}
+
+.article-svg {
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+}
+
+.account-img {
+  height: 125px;
+  width: 125px;
+  margin-right: 20px;
+  margin-bottom: 16px;
+}
+
+.account-heading {
+  font-size: 2.5rem;
+}
+
+
+
+nav a {
+  color: #ffffff;
+}
+footer {
+  color: #ffffff;
+}
+</style>
+
+
+   
+ {% endblock %}   
     
-{% endblock %}   
+
 
 
 
@@ -39,7 +111,7 @@
 
 
 {% block content %}
-<div class="bgimg w3-display-container w3-animate-opacity w3-text-white">
+
 <br>
 <br>
 <main role="main" class="container">
@@ -107,7 +179,7 @@
         
       </div>
     </main>
-</div>
+
 
 
     
