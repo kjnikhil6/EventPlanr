@@ -66,27 +66,27 @@
     <li data-target="#demo" data-slide-to="3"></li>
     <li data-target="#demo" data-slide-to="4"></li>
   </ul>
-  <div class="carousel-inner" style="background-color:black;filter: brightness(75%); " >
+  <div class="carousel-inner" style="background-color:black;filter: brightness(100%); " >
 
   {% for event,image in upcoming5.items(): %}
   {% if loop.index == 1 %}
     <div class="carousel-item active " data-interval="3000">
-      <img src="data: ;base64,{{ image}}"  alt="a" style="width:100%; height: 400px;">
+      <img src="data: ;base64,{{ image}}"  alt="a" style="width:100%; height: 500px;">
       <div class="carousel-caption ">
       <div class="content">
         <h3 class="color:white">{{event.title}}</h3>
-        <p style="color:white">{{event.description}}</p>
+        <p style="color:white line-height:1.2em;height:3.6em;overflow:hidden;">{{event.description}}</p>
         <a href="{{ url_for('event',event_id=event.id)}}" class="btn btn-success"> View </a>
       </div>
       </div>   
     </div>
    {% else %}
     <div class="carousel-item" data-interval="3000">
-      <img src="data: ;base64,{{ image}}"  style="width:100%; height: 400px;" alt="b" >
+      <img src="data: ;base64,{{ image}}"  style="width:100%; height: 500px;" alt="b" >
       <div class="carousel-caption ">
       <div class="content">
         <h3 style="color:white">{{event.title}}</h3>
-        <p style="color:white">{{event.description}}</p>
+        <p style="color:white line-height:1.2em;height:3.6em;overflow:hidden;">{{event.description}}</p>
         <a href="{{ url_for('event',event_id=event.id)}}" class="btn btn-success"> View </a>
       </div>
       </div>   

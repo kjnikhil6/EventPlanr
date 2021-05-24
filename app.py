@@ -3,4 +3,4 @@ from eventPlanr import app
 
 #db.create_all()
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)

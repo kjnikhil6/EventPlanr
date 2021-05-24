@@ -72,7 +72,11 @@ img {
     <p class="card-text">{{event.description}}.</p>
      <a href="{{ url_for('event',event_id=event.id)}}" class="btn btn-primary"> View</a>
      <div class="text-muted"><br>
-    {{(event.dateTime-today).days}} more days to go..</div>
+    {% if (event.dateTime-today).days != 0 %}
+     {{(event.dateTime-today).days}} more days to go..
+    {% else %}
+      Today
+    {% endif %}</div>
   </div>
    </div>
    </div>

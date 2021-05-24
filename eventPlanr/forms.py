@@ -52,7 +52,7 @@ class UpdateAccForm(FlaskForm):
 class HostForm(FlaskForm):
     
     title = StringField('Event Title',validators=[DataRequired(), Length(min=3, max=40)])
-    description=TextAreaField('Description',validators=[DataRequired(), Length(min=3, max=5000)])
+    description=TextAreaField('Description',validators=[DataRequired(), Length(min=50, max=5000)])
     dateTime =  StringField('Event Date&Time',validators=[DataRequired()])
     location = StringField('Event Location',validators=[DataRequired(), Length(min=3, max=20)])
     banner = FileField('Event Banner', validators=[FileAllowed(['jpg', 'png'])])
@@ -76,7 +76,7 @@ class HostForm(FlaskForm):
                 raise ValidationError('Title has already been taken')
     
     def validate_maxJoin(self, maxJoin):
-        event=Event.query.filter_by(maxJoin=maxJoin.data).first()
+        #event=Event.query.filter_by(maxJoin=maxJoin.data).first()
         if maxJoin.data < 3:
             raise ValidationError('atleast 3 participants')
 

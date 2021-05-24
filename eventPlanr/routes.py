@@ -95,26 +95,27 @@ def logout():
 
 
 
-def save_picture(form_picture,reduce=True,folder=""):
-    random_hex = secrets.token_hex(8)
-    _, f_ext = os.path.splitext(form_picture.filename)
-    picture_fn = random_hex + f_ext
-    picture_path = os.path.join(app.root_path, folder, picture_fn)
+def save_picture(form_picture,banner=True):
+    #random_hex = secrets.token_hex(8)
+    #_, f_ext = os.path.splitext(form_picture.filename)
+    #picture_fn = random_hex + f_ext
+    #picture_path = os.path.join(app.root_path, folder, picture_fn)
     stream=io.BytesIO()
-    if reduce:
-        output_size = (125, 125)
-        i = Image.open(form_picture)
-        i.thumbnail(output_size)
-        i.save(picture_path)
-    else:
+    if banner:
         i = Image.open(form_picture)
         i=i.convert('RGB')
-        i.thumbnail((1024,700))
+        i.thumbnail((1366,768))
+        i.save(stream,format="jpeg")
+        imgBytes=stream.getvalue()
+        return imgBytes        
+    else:
+        output_size = (125, 125)
+        i = Image.open(form_picture)
+        i=i.convert('RGB')
+        i.thumbnail(output_size)
         i.save(stream,format="jpeg")
         imgBytes=stream.getvalue()
         return imgBytes
-
-    return picture_fn
 
 
 # #encoding image blob if it is to reduced
@@ -130,7 +131,10 @@ def myAccount():
     if form.validate_on_submit():
         if form.picture.data:
             #picture_file = save_picture(form.picture.data,folder='static/profile_pics')
-            current_user.image_file = form.picture.data.read()
+            imgByte=save_picture(form.picture.data,banner=False)
+            #current_user.image_file = form.picture.data.read()
+            current_user.image_file=imgByte
+        
         current_user.name=form.name.data
         current_user.email=form.email.data
         db.session.commit()
@@ -174,19 +178,21 @@ def host():
             if form.banner.data:
                 
                 #to reduce resolution..........
-                #imgByte = save_picture(form.banner.data,reduce=False,folder='static/event_banner')
+                
                 #event.banner=imgByte
                 #...........
                 #event.banner_file=baner_fil
                 #evento=request.files[form.banner.name]
+                #event.banner=form.banner.data.read()
                 
-                event.banner=form.banner.data.read()
+                imgByte = save_picture(form.banner.data)
+                event.banner=imgByte
             
             event.author=current_user
             db.session.add(event)
             db.session.commit()
             flash('Your Event has been created!', 'success')
-            return redirect(url_for('host'))
+            return redirect(url_for('home'))
 
         
         return render_template('hostEvent.html',title='Host',form=form,legend='Host a Event')
