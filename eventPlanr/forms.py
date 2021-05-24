@@ -55,7 +55,7 @@ class HostForm(FlaskForm):
     description=TextAreaField('Description',validators=[DataRequired(), Length(min=50, max=5000)])
     dateTime =  StringField('Event Date&Time',validators=[DataRequired()])
     location = StringField('Event Location',validators=[DataRequired(), Length(min=3, max=20)])
-    banner = FileField('Event Banner', validators=[FileAllowed(['jpg', 'png'])])
+    banner = FileField('Event Banner', validators=[DataRequired(),FileAllowed(['jpg', 'png'])])
     maxJoin = IntegerField('Max No.of Participants',validators=[DataRequired()])
     
     submit = SubmitField('Host')

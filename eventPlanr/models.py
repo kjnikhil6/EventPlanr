@@ -1,7 +1,7 @@
 from datetime import datetime
 from eventPlanr import db,login_manager
 from flask_login import UserMixin
-from eventPlanr.defaultEnc import defaultBanner,defaultProfile
+from eventPlanr.defaultEnc import defaultProfile
 
 
 @login_manager.user_loader
@@ -43,7 +43,7 @@ class Event(db.Model):
     description = db.Column(db.Text, nullable=False)
     dateTime = db.Column(db.DateTime, nullable=False)
 
-    banner=db.Column(db.LargeBinary,default=defaultBanner)
+    banner=db.Column(db.LargeBinary,nullable=False)
     #banner_file=db.Column(db.String(50), nullable=False, default='default.jpg')
     
     maxJoin=db.Column(db.Integer,default=100)

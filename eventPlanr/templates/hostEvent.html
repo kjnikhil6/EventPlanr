@@ -117,7 +117,7 @@
                     {{ form.banner.label() }}
                     {{ form.banner(class="form-control-file") }}
                     {% if form.banner.errors %}
-                        {% for error in form.banner3333.errors %}
+                        {% for error in form.banner.errors %}
                             <span class="text-danger">{{ error }}</span></br>
                         {% endfor %}
                     {% endif %}

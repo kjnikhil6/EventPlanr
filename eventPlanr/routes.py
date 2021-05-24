@@ -1,5 +1,5 @@
-import os
-import secrets
+#import os
+#import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect,request,abort
 from eventPlanr import app,db,bcrypt
@@ -222,7 +222,7 @@ def update_event(event_id):
         if form.banner.data:
             #banner_fil = save_picture(form.banner.data,reduce=False,folder='static/event_banner')
             #event.banner_file=banner_fil
-            event.banner=form.banner.data.read()
+            event.banner=save_picture(form.banner.data)
         event.title = form.title.data
         event.description = form.description.data
         event.location= form.location.data
