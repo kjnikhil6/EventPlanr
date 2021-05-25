@@ -54,7 +54,7 @@ class HostForm(FlaskForm):
     title = StringField('Event Title',validators=[DataRequired(), Length(min=3, max=40)])
     description=TextAreaField('Description',validators=[DataRequired(), Length(min=50, max=5000)])
     dateTime =  StringField('Event Date&Time',validators=[DataRequired()])
-    location = StringField('Event Location',validators=[DataRequired(), Length(min=3, max=20)])
+    location = StringField('Event Location',validators=[DataRequired(), Length(min=3, max=60)])
     banner = FileField('Event Banner', validators=[DataRequired(),FileAllowed(['jpg', 'png'])])
     maxJoin = IntegerField('Max No.of Participants',validators=[DataRequired()])
     
@@ -86,7 +86,7 @@ class UpdateHostForm(FlaskForm):
     title = StringField('Event Title',validators=[DataRequired(), Length(min=3, max=40)])
     description=TextAreaField('Description',validators=[DataRequired(), Length(min=3, max=5000)])
     dateTime =  StringField('Event Date&Time',validators=[DataRequired()])
-    location = StringField('Event Location',validators=[DataRequired(), Length(min=3, max=20)])
+    location = StringField('Event Location',validators=[DataRequired(), Length(min=3, max=60)])
     banner = FileField('Event Banner', validators=[FileAllowed(['jpg', 'png'])])
     maxJoin = IntegerField('Max No.of Participants',validators=[DataRequired()])
     

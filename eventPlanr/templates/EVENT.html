@@ -13,7 +13,7 @@ body {
 img {
   width: 100%;
   height: 500px;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 
@@ -153,6 +153,7 @@ footer {
                 <li class="list-group-item list-group-item-primary"><strong>Max Participants:</strong>{{event.maxJoin}}</li>
                 
               </ul><br>
+             
     {% if event.author != current_user %}
        {% if event.dateTime >= today %}
           {% if  event.participants|length < event.maxJoin %}
@@ -170,15 +171,9 @@ footer {
        {% endif %}
     
     {% endif %}
+    <div><p id="demo"></p>
   </div>
-    <div class="card-footer text-muted">
-    {% if (event.dateTime-today).days != 0 %}
-     {{(event.dateTime-today).days}} more days to go..
-    {% else %}
-      Today
-    {% endif %}
     
-  </div>
 </div>
     </div>
   </article>
@@ -250,15 +245,54 @@ footer {
              
              {% endif %}
               <p> <ul class="list-group">
-              <a class="btn btn-primary" data-toggle="collapse" href="#CollapseExample" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Participants</a>
+              <a class="btn btn-primary" data-toggle="collapse" href="#CollapseExample" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Enrolled Participants</a>
               <div class="collapse" id="CollapseExample">
               {% for user in event.participants %}
               
                 <li class="list-group-item list-group-item-dark"><tt style="float:left">{{loop.index}})</tt> {{user.name}}  <br> {{ user.email}} </li>
               {% endfor %}
               </div>
+              {% if (event.dateTime-today).days <= 3 %}
+              
+                   {% if event.author.mail: %}
+              <div class="card-footer">
+
+            <button class="btn btn-outline-info" type="submit" data-toggle="modal" data-target="#confirmModal">Confirm Participation</button>
+
+              </div>
+                  {% else %}
+                  <li class="list-group-item list-group-item-dark"></li>
+              
+              
+              <a class="btn btn-primary" data-toggle="collapse" href="#CollapseExampl" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Confirmed Participants</a>
+              <div class="collapse" id="CollapseExampl">
+              {% if event.ConfirmedParticipants|length==0:%}
+              
+              <li class="list-group-item list-group-item-dark">No one has Confirmed</li>
+              {% else %}
+              {% for user in event.ConfirmedParticipants %}
+              
+                <li class="list-group-item list-group-item-dark"><tt style="float:left">{{loop.index}})</tt> {{user.name}}  <br> {{ user.email}} </li>
+              {% endfor %}
+              
+              
+              {% endif %}
+              </div>
+                             
+              
+              
+              
+                     {% endif %}
+              {% else %}
+                
+              <div class="card-footer">
+             <li> An option to send mail and confirm participation of enrolled users will be provided 3 days prior the event date</li>
+              </div>
+              {% endif %}
               </ul>
+              
             </p>
+            
         {% endif %}
             
 
@@ -296,7 +330,56 @@ footer {
        </div> </div>
 
       </div>
+      <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel" style="color:black">Send a mail to the enrolled users to confirm their participation?<br>Note:Takes Time</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form action="{{ url_for('send_confirmail', event_id=event.id) }}" method="POST">  
+            <input class="btn btn-primary" type="submit" value="Send Mail">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div> 
     </main>
+    <!-- Modal -->
   
+  <script>
+// Set the date we're counting down to
+var countDownDate = new Date("{{event.dateTime.strftime('%m/%d/%Y %I:%M')}}").getTime();
+
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+  // Get today's date and time
+  var now = new Date().getTime();
+
+  // Find the distance between now and the count down date
+  var distance = countDownDate - now;
+
+  // Time calculations for days, hours, minutes and seconds
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  // Display the result in the element with id="demo"
+  document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+  + minutes + "m " + seconds + "s ";
+
+  // If the count down is finished, write some text
+  if (distance < 0) {
+    clearInterval(x);
+    document.getElementById("demo").innerHTML = "EXPIRED";
+  }
+}, 1000);
+</script>
   
 {% endblock content %}

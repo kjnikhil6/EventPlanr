@@ -180,19 +180,6 @@ footer {
               <ul class="list-group">
 
                 <li class="list-group-item list-group-item-primary">
-                            <strong>Total No.Of Events Enrolled:</strong>
-                                   {{ joinedEvents|length}}</li>
-               
-               <a class="btn btn-primary" data-toggle="collapse" href="#JoinedEvents" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
-                Click to see Joined Events</a>
-                <div class="collapse" id="JoinedEvents">    
-            {% for event in joinedEvents %}
-              
-                <li class="list-group-item list-group-item-dark"><tt style="float:left">{{loop.index}})</tt><a href="{{ url_for('event',event_id=event.id)}}" style="color:black" > {{event.title}} </a>  </li>
-              {% endfor %}
-              
-              </div>   
-                <li class="list-group-item list-group-item-primary">
                          <strong>Total No.Of Events Hosted:</strong>
                  
                                  {{ hostedEvents|length}}</li>
@@ -209,6 +196,34 @@ footer {
               {% endfor %}
               
               </div>
+              
+              <li class="list-group-item list-group-item-primary">
+                            <strong>Total No.Of Events Enrolled:</strong>
+                                   {{ joinedEvents|length}}</li>
+               
+               <a class="btn btn-primary" data-toggle="collapse" href="#JoinedEvents" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                Click to see Enrolled Events</a>
+                <div class="collapse" id="JoinedEvents">    
+            {% for event in joinedEvents %}
+              
+                <li class="list-group-item list-group-item-dark"><tt style="float:left">{{loop.index}})</tt><a href="{{ url_for('event',event_id=event.id)}}" style="color:black" > {{event.title}} </a>  </li>
+              {% endfor %}
+              
+              </div>   
+              
+                <li class="list-group-item list-group-item-primary">
+                            <strong>Total No.Of Events You Confimred to Attend:</strong>
+                                   {{ ConfirmedEvents|length}}</li>
+               
+               <a class="btn btn-primary" data-toggle="collapse" href="#ConfimredEvents" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                Click to see Confimred Events</a>
+                <div class="collapse" id="ConfimredEvents">    
+            {% for event in ConfimredEvents %}
+              
+                <li class="list-group-item list-group-item-dark"><tt style="float:left">{{loop.index}})</tt><a href="{{ url_for('event',event_id=event.id)}}" style="color:black" > {{event.title}} </a>  </li>
+              {% endfor %}
+              
+              </div>   
               </ul>
             </p>
           </div>

@@ -118,13 +118,13 @@
   {% for event in schedule: %}
   {% if loop.index == 1 %}              
               <li class="list-timeline-item p-0 pb-3 pb-lg-4 d-flex flex-wrap flex-column">
-                <a  href="{{ url_for('event',event_id=schedule[0].id)}}"  class="my-0 text-white flex-fw text-sm text-uppercase">
+                <a  href="{{ url_for('event',event_id=event.id)}}"  class="my-0 text-white flex-fw text-sm text-uppercase">
                 <span class="text-primary op-8">
                 {{event.dateTime.strftime("%d/%m/%y %I:%M:%p")}}</span> - {{event.title}}</a>
               </li>
     {% else %}
               <li class="list-timeline-item show p-0 pb-3 pb-lg-4 d-flex flex-wrap flex-column">
-                <a href="{{ url_for('event',event_id=schedule[1].id)}}"  class="my-0 text-dark flex-fw text-sm text-uppercase">
+                <a href="{{ url_for('event',event_id=event.id)}}"  class="my-0 text-dark flex-fw text-sm text-uppercase">
                 <span class="text-dark font-weight-bold op-8 ">{{event.dateTime.strftime("%d/%m/%y %I:%M:%p")}}</span> -{{event.title}}</a>
               </li>
    {% endif %}

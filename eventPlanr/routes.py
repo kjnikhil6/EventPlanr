@@ -2,7 +2,7 @@
 #import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect,request,abort
-from eventPlanr import app,db,bcrypt
+from eventPlanr import app,db,bcrypt,mail
 from eventPlanr.forms import RegistrationForm, LoginForm,UpdateAccForm,HostForm,UpdateHostForm
 from eventPlanr.models import User, Event
 from flask_login import login_user,current_user,logout_user,login_required
@@ -10,6 +10,7 @@ import io
 from base64 import b64encode
 import pytz
 from datetime import datetime
+from flask_mail import Message
 
 
 IST=pytz.timezone('Asia/Kolkata')
@@ -148,9 +149,10 @@ def myAccount():
     
     hostedEvents=current_user.posts
     joinedEvents=current_user.JoinedEvent
+    ConfimredEvents=current_user.ConfirmedEvent
     
     
-    return render_template('profile.html',title='myAcc',profile_pic =img_file ,form=form,hostedEvents=hostedEvents,joinedEvents=joinedEvents)
+    return render_template('profile.html',title='myAcc',profile_pic =img_file ,form=form,hostedEvents=hostedEvents,joinedEvents=joinedEvents,ConfimredEvents=ConfimredEvents)
 
 
 @app.route('/events')
@@ -208,7 +210,7 @@ def event(event_id):
     profile_pi=img_decoder(event.author.image_file)
     today=datetime.now(IST).replace(tzinfo=None)
     
-    return render_template('EVENT.html',title=event.title,profile_pic=profile_pi,event=event,banner=bannr,enrollVal=enroll,today=today)
+    return render_template('EVENT.html',title=event.title,profile_pic=profile_pi,event=event,banner=bannr,enrollVal=enroll,today=today,mail=event.author.mail)
 
 @app.route("/events/<int:event_id>/update", methods=['GET', 'POST'])
 @login_required
@@ -227,6 +229,7 @@ def update_event(event_id):
         event.description = form.description.data
         event.location= form.location.data
         event.dateTime = form.dateTime.data
+        event.author.mail=1
         if form.maxJoin.data < len(event.participants):
             db.session.commit()
             flash('All Details Expect No. of Max Participants Was Updated.\n Since '+str(len(event.participants))+' Participants has already been Enrolled','warning')
@@ -257,6 +260,7 @@ def delete_event(event_id):
 
 
 @app.route("/events/<int:event_id>/join",methods=['POST'])
+@login_required
 def join_event(event_id):
     event = Event.query.get_or_404(event_id)
     today=datetime.now(IST).replace(tzinfo=None)
@@ -321,4 +325,85 @@ def user_HostEvents(user_id):
     #flash('You successfully joined!', 'success')
     #return redirect(url_for('home'))
     
+#.......................confirm_mail............
+def send_confirm_email(user,event):
+    token = user.get_confirm_token(event.id)
+    msg = Message('Event Confirmation',
+                  sender='noreply@demo.com',
+                  recipients=[user.email])
+    msg.body = f'''To Confirm your participation in {event.title}, visit the following link:
+{url_for('iconfirm', token=token, _external=True)}
+
+This mail has been sent since you have enrolled in {event.title} @eventPlanr.
+If you are not able to attend the event then simply ignore this email.
+'''
+    try:
+        mail.send(msg)
+    except:
+        flash(f'failed to sent confirm mail to {user.email}', 'warning')
+        return redirect(url_for('event', event_id=event.id))
+        
+
+@app.route("/events/<int:event_id>/send_confirmail",methods=['POST'])
+@login_required
+def send_confirmail(event_id):
+    today=datetime.now(IST).replace(tzinfo=None)
+    event = Event.query.get_or_404(event_id)
+    if event.author != current_user:
+        abort(403)
+    elif event.dateTime<today:
+        flash('This event has expired', 'danger')
+        return redirect(url_for('event', event_id=event.id))
+    else:
+        users=event.participants
+        if len(users)==0:
+            flash('No enrolled user to confirm', 'warning')
+            return redirect(url_for('event', event_id=event.id))
+        event.author.mail=0
+        db.session.commit()
+        for user in users:
+            if user not in event.ConfirmedParticipants:
+                send_confirm_email(user,event)
+            else:
+                continue
+        flash('An email has been sent to confirm the participation of enrolled users.', 'info')
+        return redirect(url_for('event', event_id=event.id))
+
+@app.route("/iconfirm/<token>")
+def iconfirm(token):
+    today=datetime.now(IST).replace(tzinfo=None)    
+    userEvent = User.verify_confirm_token(token)
+    if userEvent is None:
+        if current_user.is_authenticated:
+            flash('That is an invalid or expired token', 'warning')
+            return redirect(url_for('home'))
+        else:
+            flash('That is an invalid or expired token', 'warning')
+            return redirect(url_for('login'))
+    user,event=userEvent
+    if event.dateTime<today:
+        if current_user.is_authenticated:
+            flash('The event has expired', 'warning')
+            return redirect(url_for('home'))
+        else:
+            flash('The event has expired', 'warning')
+            return redirect(url_for('login'))
     
+    elif user in event.ConfirmedParticipants:
+         if current_user.is_authenticated:
+            flash('You have already confirmed your participation!', 'warning')
+            return redirect(url_for('home'))
+         else:
+             flash('You have already confirmed your participation!', 'warning')
+             return redirect(url_for('login'))
+    else:
+        event.ConfirmedParticipants.append(user)
+        db.session.commit()
+        if current_user.is_authenticated:
+            flash('You have successfully confirmed your participation', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash('You have successfully confirmed your participation', 'success')
+            return redirect(url_for('login'))
+        
+
