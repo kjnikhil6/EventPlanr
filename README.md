@@ -62,14 +62,14 @@ wtforms==2.2.1
 ## How to configure
 Instructions for setting up project
 
-1)clone the github repo to your local machine
-2)pip install the files in "requirements.txt"
-3)add environment variable to store email address and password and call the variables in init.py file
-4)open terminal(cmd) and change directory to the folder where you cloned the github repo
+1)clone the github repo to your local machine.  
+2)pip install the files in "requirements.txt".  
+3)add environment variable to store email address and password and call the variables in init.py file.  
+4)open terminal(cmd) and change directory to the folder where you cloned the github repo.    
 5)then type 
     >>>"from eventPlanr import db"
-    >>>"db.create_all()"
-  the above commands is to create the database "site.db" in your directory
+    >>>"db.create_all()"  
+  the above commands is to create the database "site.db" in your directory.  
 
 
 ## How to Run
