@@ -1,19 +1,19 @@
 ![BFH Banner](https://trello-attachments.s3.amazonaws.com/542e9c6316504d5797afbfb9/542e9c6316504d5797afbfc1/39dee8d993841943b5723510ce663233/Frame_19.png)
 # eventPlanr
-eventPlanr: [https://eventplanr.herokuapp.com/]
------With eventPlanr User can create His/Her account and Host/Enroll in Events.
+## eventPlanr: [https://eventplanr.herokuapp.com/]
+## -With eventPlanr User can create His/Her account and Host/Enroll in Events.
 
-*User is able to sign up,signin,create/join event,and logout.
+*User is able to sign up,signin,create/join event,and logout.</br>
 *User's Home page consists of schedule for notifying His/Her Upcoming Events(joined&hosted),
-      a slideshow containing details of latest 5 upcoming events.
+      a slideshow containing details of latest 5 upcoming events.  
 *A profile page is provided where user can update his details and upload profile picture,
-      a dashboard is provided to view his joined/hosted events.
-*User can host events By filling in details(title,description,banner,date,location....)
-*A option to update/delete the hosted events is given to the host.
-*the host can view the details of participants 
-*User can view all upcoming events and enroll 
-*Non-Signedin users can also view the ongoing events
-*Added rvsp module to confirm participation of users(by send mail to enrolled users)
+      a dashboard is provided to view his joined/hosted events.  
+*User can host events By filling in details(title,description,banner,date,location....)    
+*A option to update/delete the hosted events is given to the host.  
+*the host can view the details of participants. 
+*User can view all upcoming events and enroll.  
+*Non-Signedin users can also view the ongoing events.  
+*Added rvsp module to confirm participation of users(by send mail to enrolled users).  
 
 
 ## Team members
